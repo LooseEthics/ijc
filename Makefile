@@ -3,9 +3,13 @@ CFLAGS = -g -std=c11 -Wall -Wextra -pedantic
 
 SRCS = main.c
 OBJS = $(SRCS:.c=.o)
-TARGET = main
+ifeq ($(OS),Windows_NT)
+	TARGET = main.exe
+else
+	TARGET = main
+endif
 
-$TARGET: $OBJS
+$(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^
 
 %.o: %.c
@@ -13,4 +17,8 @@ $TARGET: $OBJS
 
 .PHONY: clean
 clean:
+ifeq ($(OS),Windows_NT)
+	del $(OBJS) $(TARGET)
+else
 	rm -f $(OBJS) $(TARGET)
+endif
