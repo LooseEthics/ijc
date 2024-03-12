@@ -19,11 +19,14 @@ void print_bs(bitset_t bs){
 }
 
 int main(){
-    bitset_create(a, 250);
+    bitset_create(a, 33);
     print_bs(a);
     bitset_fill(a, 1);
     print_bs(a);
     bitset_fill(a, 0);
+    print_bs(a);
+    bitset_setbit(a, 10, 1);
+    bitset_setbit(a, 20, 1);
     print_bs(a);
     bitset_free(a);
     return 0;
