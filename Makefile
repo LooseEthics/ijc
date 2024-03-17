@@ -1,15 +1,22 @@
 CC = gcc
 CFLAGS = -g -std=c11 -Wall -Wextra -pedantic
 
-SRCS = main.c
+SRCS = bitset.c no-comment.c
 OBJS = $(SRCS:.c=.o)
 ifeq ($(OS),Windows_NT)
-	TARGET = main.exe
+	TARGETS = $(SRCS:.c=.exe)
+	RM = del /Q
 else
-	TARGET = main
+	TARGETS = $(SRCS:.c=)
+	RM = rm -f
 endif
 
-$(TARGET): $(OBJS)
+all: $(TARGETS)
+
+%: %.o
+	$(CC) $(CFLAGS) -o $@ $^
+
+%.exe: %.o
 	$(CC) $(CFLAGS) -o $@ $^
 
 %.o: %.c
@@ -17,8 +24,4 @@ $(TARGET): $(OBJS)
 
 .PHONY: clean
 clean:
-ifeq ($(OS),Windows_NT)
-	del $(OBJS) $(TARGET)
-else
-	rm -f $(OBJS) $(TARGET)
-endif
+	$(RM) $(OBJS) $(TARGETS)

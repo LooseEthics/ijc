@@ -2,6 +2,14 @@
 #include <assert.h>
 #include <malloc.h>
 
+// TODO
+// formatted assert
+// inlines
+// Eratosthenes
+// clock
+// error.c
+// no-comment.c
+
 typedef unsigned long bitset_index_t;
 
 #define LONG_BSIZE (sizeof(unsigned long) * 8)
@@ -23,8 +31,6 @@ typedef struct {
 // I guess just don't use these as the body of single line ifs and fors
 #define bitset_create(_name, _size) \
   bitset_index_t _bitset_size = BIT_TO_UL(_size); \
-  printf("_bitset_size %u\n", _bitset_size); \
-  printf("%u %u %u\n", 1, (_size / LONG_BSIZE), ((_size & (sizeof(unsigned long) - 1)) != 0)); \
   unsigned long _bitset_stuff[_bitset_size]; \
   _bitset_stuff[0] = _size; \
   for (unsigned i = 1; i < _bitset_size; i++) _bitset_stuff[i] = 0x0; \
