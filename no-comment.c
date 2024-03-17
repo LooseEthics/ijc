@@ -265,7 +265,7 @@ int main(int argc, char *argv[]){
       case CHARLIT:
         if (c == '\\'){
           s = CLBS;
-        } else if (c == '?'){
+        } else if (DO_TRIGRAPHS && c == '?'){
           s = CLQ1;
         } else {
           s = CLDONE;
@@ -275,7 +275,7 @@ int main(int argc, char *argv[]){
       case CLBS:
         if (c == '\n'){
           s = CHARLIT;
-        } else if (c == '?'){
+        } else if (DO_TRIGRAPHS && c == '?'){
           s = CLBSQ1;
         } else {
           s = CLDONE;
