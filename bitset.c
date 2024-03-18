@@ -14,7 +14,7 @@ void print_hex_ul(unsigned long ul){
 
 void print_bits(unsigned long ul){
   for (int i = sizeof(unsigned long)*8 - 1; i >= 0; i--){
-    printf("%i", (ul & (0x1 << i)) != 0);
+    printf("%i%s", ((ul & (0x1 << i)) != 0), ((i != 0) && (i%8 == 0)) ? ":" : "");
   }
   printf(" ");
 }
@@ -22,21 +22,21 @@ void print_bits(unsigned long ul){
 void print_bs(bitset_t bs){
   printf("Size: %lu\n", bs.stuff[0]);
   print_bits(bs.stuff[0]);
-  for (unsigned i = 1; i < BIT_TO_UL(bs.stuff[0]); i++){
+  for (unsigned i = 1; i <= BIT_TO_UL(bs.stuff[0]); i++){
     if (!((i - 1) & 0x3)) printf("\n");
     print_bits(bs.stuff[i]);
   }
   printf("\n");
   print_hex_ul(bs.stuff[0]);
-  for (unsigned i = 1; i < BIT_TO_UL(bs.stuff[0]); i++){
+  for (unsigned i = 1; i <= BIT_TO_UL(bs.stuff[0]); i++){
     if (!((i - 1) & 0x3)) printf("\n");
     print_hex_ul(bs.stuff[i]);
   }
   printf("\n");
 }
 
-int main(){
-    bitset_index_t size = 241;
+int bitset_test(){
+    bitset_index_t size = 2412;
     printf("bitset_create(a, %i);\n", size);
     bitset_create(a, size);
     print_bs(a);
