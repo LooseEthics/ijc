@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -g -std=c11 -Wall -Wextra -pedantic
 
-SRCS = bitset.c no-comment.c
+SRCS = bitset.c no-comment.c erat.c
 OBJS = $(SRCS:.c=.o)
 ifeq ($(OS),Windows_NT)
 	TARGETS = $(SRCS:.c=.exe)
