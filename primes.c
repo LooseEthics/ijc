@@ -118,7 +118,7 @@ int main(){
 
   fprintf(stderr, "Time=%.3g\n", ((double)clock() - start) / CLOCKS_PER_SEC);
   for (unsigned long i = 0; i < prime_target; i++) printf("%lu\n", last_primes[i]);
-
+/*
   start = clock();
   for (unsigned long primes_found = 0, n = num_target; primes_found < prime_target;){
     if (wilson_check(n) != 0){
@@ -128,7 +128,7 @@ int main(){
     n--;
   }
   fprintf(stderr, "WTime=%.3g\n", ((double)clock() - start) / CLOCKS_PER_SEC);
-
+*/
   //bitset_free(bs);
   return 0;
 }
