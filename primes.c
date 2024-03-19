@@ -87,7 +87,7 @@ int tests(){
   unsigned istart = 50000000;
   unsigned interval = 1000;
   start = clock();
-  for (unsigned i = istart; i < istart + interval; i++){
+  for (unsigned long i = istart; i < istart + interval; i++){
     if (wilson_check(i) != 0){
       printf("%lu\n", i);
       ;

@@ -43,7 +43,7 @@ void print_bs(bitset_t bs){
 
 int bitset_test(){
     bitset_index_t size = 2412;
-    printf("bitset_create(a, %i);\n", size);
+    printf("bitset_create(a, %lu);\n", size);
     bitset_create(a, size);
     print_bs(a);
     printf("bitset_fill(a, 1);\n");

@@ -25,31 +25,39 @@ all: $(TARGETS)
 	$(CC) $(CFLAGS) -o $@ $^
 
 # overwrite for those that need more
-primes: primes.o eratosthenes.o bitset.o error.o
-	$(CC) $(CFLAGS) $(STACKFLAG) -o $@ $^
-
+ifeq ($(OS),Windows_NT)
 primes.exe: primes.o eratosthenes.o bitset.o error.o
 	$(CC) $(CFLAGS) $(STACKFLAG) -o $@ $^
-
-primes-i: primes.o eratosthenes.o bitset.o error.o
-	$(CC) $(CFLAGS) $(STACKFLAG) -DUSE_INLINE -o $@ $^
 
 primes-i.exe: primes.o eratosthenes.o bitset.o error.o
 	$(CC) $(CFLAGS) $(STACKFLAG) -DUSE_INLINE -o $@ $^
 
+no-comment.exe: no-comment.o error.o
+	$(CC) $(CFLAGS) -o $@ $^
+
+run: all
+	./primes
+	./primes-i
+
+else
+primes: primes.o eratosthenes.o bitset.o error.o
+	$(CC) $(CFLAGS) -o $@ $^
+
+primes-i: primes.o eratosthenes.o bitset.o error.o
+	$(CC) $(CFLAGS) -DUSE_INLINE -o $@ $^
+
 no-comment: no-comment.o error.o
 	$(CC) $(CFLAGS) -o $@ $^
 
-no-comment.exe: no-comment.o error.o
-	$(CC) $(CFLAGS) -o $@ $^
+run: all
+	ulimit -s 131072; ./primes;	./primes-i
+endif
 
 # objects only need the own .c and .h
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-run: all
-	./primes
-	./primes-i
+
 
 .PHONY: clean
 clean:

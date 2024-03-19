@@ -27,6 +27,7 @@ typedef struct {
 // size long + full longs + final long
 #define BIT_TO_UL(size) (1 + (size / LONG_BSIZE) + ((size & (sizeof(unsigned long) - 1)) != 0))
 
+// _msize returns exact, malloc_usable_size can return a bigger number
 #if defined(_WIN32) || defined(_WIN64) // windows
 #define MALLOC_SIZE(ptr) _msize(ptr)
 #else // linux
@@ -48,7 +49,7 @@ typedef struct {
   unsigned long* _bitset_stuff = (unsigned long *)calloc(_bitset_size + 1, sizeof(unsigned long)); \
   assert(((void)"bitset_alloc: Chyba alokace paměti", \
     _bitset_stuff != NULL && \
-    MALLOC_SIZE(_bitset_stuff) == (BIT_TO_UL(_size) + 1) * sizeof(_bitset_stuff[0]) )); \
+    MALLOC_SIZE(_bitset_stuff) >= (BIT_TO_UL(_size) + 1) * sizeof(_bitset_stuff[0]) )); \
   _bitset_stuff[0] = (_size); \
   bitset_t _name = {_bitset_stuff};
 
@@ -66,15 +67,15 @@ typedef struct {
 #define bitset_setbit(_name, _index, _bool) \
   do { \
     if ((_index) >= bitset_size(_name)) error_exit("bitset_setbit: Index %lu mimo rozsah 0..%lu", (_index), bitset_size(_name)); \
-    unsigned long _mask = (0x1 << (LONG_BSIZE - 1 - (_index))); \
+    unsigned long _mask = (0x1UL << (LONG_BSIZE - 1 - (_index))); \
     bitset_index_t _byte_index = ((_index) / LONG_BSIZE) + 1; \
     (_name).stuff[_byte_index] = (_bool) ? ((_name).stuff[_byte_index] | _mask) : ((_name).stuff[_byte_index] & (~_mask)); \
   } while (0);
 
 #define bitset_getbit(_name, _index) \
   ( \
-    (void)(((_index) >= bitset_size(_name)) ? error_exit("bitset_setbit: Index %lu mimo rozsah 0..%lu", (_index), bitset_size(_name)) : (void)printf("")), \
-    (unsigned)(((_name).stuff[((_index) / LONG_BSIZE) + 1] & (0x1 << (LONG_BSIZE - 1 - (_index)))) != 0) \
+    (void)(((_index) >= bitset_size(_name)) ? error_exit("bitset_setbit: Index %lu mimo rozsah 0..%lu", (_index), bitset_size(_name)) : (void)0), \
+    (unsigned)(((_name).stuff[((_index) / LONG_BSIZE) + 1] & (0x1UL << (LONG_BSIZE - 1 - (_index)))) != 0) \
   )
 
 #else
@@ -93,14 +94,14 @@ static inline void bitset_fill(bitset_t _name, unsigned char _bool){
 
 static inline void bitset_setbit(bitset_t _name, bitset_index_t _index, unsigned char _bool){
     if ((_index) >= bitset_size(_name)) error_exit("bitset_setbit: Index %lu mimo rozsah 0..%lu", (_index), bitset_size(_name));
-    unsigned long _mask = (0x1 << (LONG_BSIZE - 1 - (_index)));
+    unsigned long _mask = (0x1UL << (LONG_BSIZE - 1 - (_index)));
     bitset_index_t _byte_index = ((_index) / LONG_BSIZE) + 1;
     (_name).stuff[_byte_index] = (_bool) ? ((_name).stuff[_byte_index] | _mask) : ((_name).stuff[_byte_index] & (~_mask));
   }
 
 static inline unsigned char bitset_getbit(bitset_t _name, bitset_index_t _index){
   if ((_index) >= bitset_size(_name)) error_exit("bitset_setbit: Index %lu mimo rozsah 0..%lu", (_index), bitset_size(_name));
-  return (unsigned)(((_name).stuff[((_index) / LONG_BSIZE) + 1] & (0x1 << (LONG_BSIZE - 1 - (_index)))) != 0);
+  return (unsigned)(((_name).stuff[((_index) / LONG_BSIZE) + 1] & (0x1UL << (LONG_BSIZE - 1 - (_index)))) != 0);
 }
 #endif
 
