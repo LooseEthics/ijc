@@ -1,8 +1,10 @@
 CC = gcc
-CFLAGS = -g -std=c11 -Wall -Wextra -pedantic
+CFLAGS = -g -std=c11 -Wall -Wextra -pedantic -O2
+# 128 MB stack
+STACKFLAG = -Wl,--stack,134217728
 
-NON_MAIN_SRCS = bitset.c
-SRCS = no-comment.c erat.c
+NON_MAIN_SRCS = bitset.c error.c
+SRCS = eratosthenes.c no-comment.c
 OBJS = $(SRCS:.c=.o) $(NON_MAIN_SRCS:.c=.o)
 
 ifeq ($(OS),Windows_NT)
@@ -23,16 +25,15 @@ all: $(TARGETS)
 	$(CC) $(CFLAGS) -o $@ $^
 
 # overwrite for those that need more
-erat: erat.o bitset.o
-	$(CC) $(CFLAGS) -o $@ $^
+eratosthenes: eratosthenes.o bitset.o error.o
+	$(CC) $(CFLAGS) $(STACKFLAG) -o $@ $^
 
-erat.exe: erat.o bitset.o
-	$(CC) $(CFLAGS) -o $@ $^
+eratosthenes.exe: eratosthenes.o bitset.o error.o
+	$(CC) $(CFLAGS) $(STACKFLAG) -o $@ $^
 
 # objects only need the own .c and .h
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c -o $@ $<
-
 
 .PHONY: clean
 clean:

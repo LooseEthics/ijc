@@ -1,8 +1,20 @@
+// eratosthenes.c
+// Řešení IJC-DU1, příklad a), 19.3.2024
+// Autor: Jan Kugler, FIT
+// Přeloženo: gcc 6.3.0
+//
+// Obsahuje implementaci Eratosthenova síta pomocí bitset.h
+// Dále obsahuje:
+//   Modulární exponenciaci
+//   Test primality podle Wilsonovy věty
+//   Primorial (produkt prvních n prvočísel)
+//   Integer odmocninu
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
-#include "erat.h"
+#include "eratosthenes.h"
 #include "bitset.h"
 
 unsigned long modular_exp(unsigned long base, unsigned long exponent, unsigned long mod){
@@ -32,7 +44,7 @@ unsigned long wilson_check(unsigned long p){
   // Wilson's theorem
   // p>1 is prime <=> (p-1)! = p-1 mod p
   //
-  // time data (with printf overhead):
+  // time data (with printf overhead, -O0):
   // start - number interval: time - average time per function call
   // 0 - 10k: 0.362 s - 36.2 us
   // 10k - 10k: 0.653 s - 65.3 us
@@ -66,6 +78,8 @@ unsigned long primorial(unsigned k){
 }
 
 unsigned long isqrt(unsigned long num){
+  // integer square root
+  // returns highest integer <= sqrt(num)
   if (num <= 1) return num;
   unsigned long x0, x1, tmpnum;
 
@@ -169,7 +183,7 @@ int tests(){
 int main(){
   unsigned long prime_target = 10, num_target = 666000000;
   unsigned long last_primes[prime_target];
-  bitset_alloc(bs, num_target);
+  bitset_create(bs, num_target);
   clock_t start, end;
   double cpu_time_used;
 
@@ -192,6 +206,6 @@ int main(){
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
   printf("CPU time used on Wilson: %f seconds\n", cpu_time_used);
   */
-  bitset_free(bs);
+  //bitset_free(bs);
   return 0;
 }

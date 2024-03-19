@@ -1,5 +1,11 @@
+// bitset.c
+// Řešení IJC-DU1, příklad a), 19.3.2024
+// Autor: Jan Kugler, FIT
+// Přeloženo: gcc 6.3.0
+//
+// Obsahuje utility funkce pro bitset_t
+
 #include "bitset.h"
-#include <stdio.h>
 
 void print_hex_ul(unsigned long ul){
   char nibble;

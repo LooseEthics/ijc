@@ -1,14 +1,22 @@
-#include <stdlib.h>
+// bitset.c
+// Řešení IJC-DU1, příklad a), 19.3.2024
+// Autor: Jan Kugler, FIT
+// Přeloženo: gcc 6.3.0
+//
+// Header pro bitset.c
+// Implementuje bitset_t a makra pro práci s ním
+
 #include <assert.h>
 #include <malloc.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+#include "error.h"
 
 // TODO
 // formatted assert
 // inlines
-// Eratosthenes
 // clock
-// error.c
-// no-comment.c
 
 typedef unsigned long bitset_index_t;
 
@@ -58,9 +66,7 @@ typedef struct {
 //TODO somehow shove the formatting into the assert
 #define bitset_setbit(_name, _index, _bool) \
   do { \
-    assert(((void)"bitset_setbit: Index %lu mimo rozsah 0..%lu", \
-      (_index) < (_name).stuff[0] \
-    )); \
+    if ((_index) >= bitset_size(_name)) error_exit("bitset_setbit: Index %lu mimo rozsah 0..%lu", (_index), bitset_size(_name)); \
     unsigned long _mask = (0x1 << (LONG_BSIZE - 1 - (_index))); \
     bitset_index_t _byte_index = ((_index) / LONG_BSIZE) + 1; \
     (_name).stuff[_byte_index] = (_bool) ? ((_name).stuff[_byte_index] | _mask) : ((_name).stuff[_byte_index] & (~_mask)); \
@@ -69,10 +75,8 @@ typedef struct {
 //TODO somehow shove the formatting into the assert
 #define bitset_getbit(_name, _index) \
   ( \
-    assert(((void)"bitset_getbit: Index %lu mimo rozsah 0..%lu", \
-      (_index) < (_name).stuff[0] \
-    )), \
-    (((_name).stuff[((_index) / LONG_BSIZE) + 1] & (0x1 << (LONG_BSIZE - 1 - (_index)))) != 0) \
+    (void)(((_index) >= bitset_size(_name)) ? error_exit("bitset_setbit: Index %lu mimo rozsah 0..%lu", (_index), bitset_size(_name)) : (void)printf("")), \
+    (unsigned)(((_name).stuff[((_index) / LONG_BSIZE) + 1] & (0x1 << (LONG_BSIZE - 1 - (_index)))) != 0) \
   )
 
 

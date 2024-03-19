@@ -1,4 +1,9 @@
-
+// eratosthenes.h
+// Řešení IJC-DU1, příklad a), 19.3.2024
+// Autor: Jan Kugler, FIT
+// Přeloženo: gcc 6.3.0
+//
+// Header pro eratosthenes.c
 
 const unsigned first_twenty_primes[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71};
 
