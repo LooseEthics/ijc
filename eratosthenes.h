@@ -5,8 +5,11 @@
 //
 // Header pro eratosthenes.c
 
-const unsigned first_twenty_primes[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71};
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
-unsigned long modular_exp(unsigned long base, unsigned long exponent, unsigned long mod);
-unsigned long wilson_check(unsigned long p);
-unsigned long primorial(unsigned k);
+#include "bitset.h"
+
+void Eratosthenes(bitset_t bs);
+void eratosthenes_get_primes(bitset_t bs, unsigned long *prime_buffer, unsigned prime_target);

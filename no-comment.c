@@ -1,48 +1,11 @@
-#include <stdio.h>
-#include <stdlib.h>
+// no-comment.c
+// Řešení IJC-DU1, příklad b), 19.3.2024
+// Autor: Jan Kugler, FIT
+// Přeloženo: gcc 6.3.0
+//
+// Implementuje FSM pro odstraňování C komentářů
 
-#define DO_TRIGRAPHS 1
-
-enum State{
-  CODE,
-  SLASH,
-  SLASH_BS,
-  SLASH_Q1,
-  SLASH_Q2,
-  LINE_COM,
-  LINE_BS,
-  LINE_Q1,
-  LINE_Q2,
-  MULTILINE_COM,
-  MULTILINE_STAR,
-  MLS_BS,
-  MLS_Q1,
-  MLS_Q2,
-  STRLIT,
-  STRLIT_BS,
-  STRLIT_Q1,
-  STRLIT_Q2,
-  CHARLIT,
-  CLBS,
-  CLQ1,
-  CLQ2,
-  CLBSQ1,
-  CLBSQ2,
-  CLDONE
-};
-
-typedef struct Buffer{
-  // technically you could have a source code that goes / \ \n \ \n \ \n ...
-  // that alone could be solved with a repetition counter
-  // but replace some of those \ with trigraphs and this thing becomes incompressible
-  // of course I could just store trigraphs as \, but that could transform the input in a way that's outside the specification, so let's not do that
-  // the biggest thing that's not something stupid like that that could get stored here is the following
-  // / ? ? / \n
-  // 47 63 63 47 10
-  char b[16];
-  unsigned i;
-  unsigned imax;
-} buffer_t;
+#include "no-comment.h"
 
 /*
 int trigraphs_exist(){
@@ -81,6 +44,7 @@ int main(int argc, char *argv[]){
   FILE *fp;
   if (argc > 1){
     fp = fopen(argv[1], "r");
+    if (fp == NULL) error_exit("Soubor %s nelze otevřít\n", argv[1]);
   } else {
     fp = stdin;
   }
@@ -243,7 +207,7 @@ int main(int argc, char *argv[]){
         break;
       case STRLIT_BS:
         // eat any char
-        s = LINE_COM;
+        s = STRLIT;
         putchar(c);
         break;
       case STRLIT_Q1:
@@ -321,10 +285,10 @@ int main(int argc, char *argv[]){
         break;
     }
     if (olds != s){
-      //printf("\nState change %u -> %u on char %c(%u)\n", olds, s, c, c);
+      //printf("\nState change %s -> %s on char %c(%u)\n", state_name[olds], state_name[s], c, c);
       ;
     }
   }
-
   if (argc > 1) fclose(fp);
+  if (s != CODE) error_exit("Neočekávaný EOF ve stavu %u\n", s);
 }

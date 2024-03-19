@@ -1,12 +1,11 @@
 // error.c
-// Řešení IJC-DU1, příklad a), 19.3.2024
+// Řešení IJC-DU1, příklad b), 19.3.2024
 // Autor: Jan Kugler, FIT
 // Přeloženo: gcc 6.3.0
 //
 // Obsahuje funkce pro tisk varování a chyb
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
+
+#include "error.h"
 
 void warning(const char *fmt, ...){
   va_list vl;

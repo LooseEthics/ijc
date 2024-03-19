@@ -14,8 +14,6 @@
 #include "error.h"
 
 // TODO
-// formatted assert
-// inlines
 // clock
 
 typedef unsigned long bitset_index_t;
@@ -37,6 +35,7 @@ typedef struct {
 
 // Can't put bitset_create and bitset_alloc inside a do-while, the structs don't persist
 // I guess just don't use these as the body of single line ifs and fors
+// Also I don't think you can make these as inlines
 #define bitset_create(_name, _size) \
   bitset_index_t _bitset_size = BIT_TO_UL(_size); \
   unsigned long _bitset_stuff[_bitset_size + 1]; \
@@ -53,6 +52,7 @@ typedef struct {
   _bitset_stuff[0] = (_size); \
   bitset_t _name = {_bitset_stuff};
 
+#ifndef USE_INLINE
 #define bitset_free(_name) free((_name).stuff)
 
 #define bitset_size(_name) ((_name).stuff[0])
@@ -60,10 +60,9 @@ typedef struct {
 #define bitset_fill(_name, _bool) \
   do { \
     unsigned long _fill = (_bool) ? ~0x0 : 0x0; \
-    for (unsigned i = 1; i <= BIT_TO_UL((_name).stuff[0]); i++) (_name).stuff[i] = _fill; \
+    for (unsigned i = 1; i <= BIT_TO_UL(bitset_size(_name)); i++) (_name).stuff[i] = _fill; \
   } while (0);
 
-//TODO somehow shove the formatting into the assert
 #define bitset_setbit(_name, _index, _bool) \
   do { \
     if ((_index) >= bitset_size(_name)) error_exit("bitset_setbit: Index %lu mimo rozsah 0..%lu", (_index), bitset_size(_name)); \
@@ -72,13 +71,38 @@ typedef struct {
     (_name).stuff[_byte_index] = (_bool) ? ((_name).stuff[_byte_index] | _mask) : ((_name).stuff[_byte_index] & (~_mask)); \
   } while (0);
 
-//TODO somehow shove the formatting into the assert
 #define bitset_getbit(_name, _index) \
   ( \
     (void)(((_index) >= bitset_size(_name)) ? error_exit("bitset_setbit: Index %lu mimo rozsah 0..%lu", (_index), bitset_size(_name)) : (void)printf("")), \
     (unsigned)(((_name).stuff[((_index) / LONG_BSIZE) + 1] & (0x1 << (LONG_BSIZE - 1 - (_index)))) != 0) \
   )
 
+#else
+static inline void bitset_free(bitset_t _name){
+  free((_name).stuff);
+}
+
+static inline bitset_index_t bitset_size(bitset_t _name){
+  return ((_name).stuff[0]);
+}
+
+static inline void bitset_fill(bitset_t _name, unsigned char _bool){
+  unsigned long _fill = (_bool) ? ~0x0 : 0x0;
+  for (unsigned i = 1; i <= BIT_TO_UL(bitset_size(_name)); i++) (_name).stuff[i] = _fill;
+}
+
+static inline void bitset_setbit(bitset_t _name, bitset_index_t _index, unsigned char _bool){
+    if ((_index) >= bitset_size(_name)) error_exit("bitset_setbit: Index %lu mimo rozsah 0..%lu", (_index), bitset_size(_name));
+    unsigned long _mask = (0x1 << (LONG_BSIZE - 1 - (_index)));
+    bitset_index_t _byte_index = ((_index) / LONG_BSIZE) + 1;
+    (_name).stuff[_byte_index] = (_bool) ? ((_name).stuff[_byte_index] | _mask) : ((_name).stuff[_byte_index] & (~_mask));
+  }
+
+static inline unsigned char bitset_getbit(bitset_t _name, bitset_index_t _index){
+  if ((_index) >= bitset_size(_name)) error_exit("bitset_setbit: Index %lu mimo rozsah 0..%lu", (_index), bitset_size(_name));
+  return (unsigned)(((_name).stuff[((_index) / LONG_BSIZE) + 1] & (0x1 << (LONG_BSIZE - 1 - (_index)))) != 0);
+}
+#endif
 
 void print_hex_ul(unsigned long ul);
 void print_bits(unsigned long ul);

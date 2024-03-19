@@ -1,0 +1,4 @@
+ababa
+'\''
+'\\'
+"text\"text"
