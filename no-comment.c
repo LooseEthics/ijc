@@ -1,7 +1,7 @@
 // no-comment.c
 // Řešení IJC-DU1, příklad b), 19.3.2024
 // Autor: Jan Kugler, FIT
-// Přeloženo: gcc 6.3.0
+// Přeloženo: MinGW 6.3.0, Ubuntu 9.4.0
 //
 // Implementuje FSM pro odstraňování C komentářů
 
@@ -15,12 +15,7 @@ int trigraphs_exist(){
 }
 */
 
-/*\*/
-/**\
-/
-
 void buffer_add(buffer_t *buffer, char c){
-  //printf("buffer add %c to %u\n", c, buffer->i);
   if (buffer->i >= buffer->imax) exit(EXIT_FAILURE);
   buffer->b[buffer->i++] = c;
 }
@@ -51,12 +46,8 @@ int main(int argc, char *argv[]){
 
   char c;
   buffer_t buffer = {.b = {0}, .i = 0, .imax = 16};
-  enum State s = CODE, olds;
+  enum State s = CODE;
   while ((c = getc(fp)) != EOF){
-    //printf("%c %i\n", c, c);
-    //printf("%c", c);
-    olds = s;
-    //continue;
     switch (s){
       case CODE:
         if (c == '/'){
@@ -283,10 +274,6 @@ int main(int argc, char *argv[]){
         s = CODE;
         putchar(c);
         break;
-    }
-    if (olds != s){
-      //printf("\nState change %s -> %s on char %c(%u)\n", state_name[olds], state_name[s], c, c);
-      ;
     }
   }
   if (argc > 1) fclose(fp);

@@ -1,7 +1,7 @@
 // bitset.c
 // Řešení IJC-DU1, příklad a), 19.3.2024
 // Autor: Jan Kugler, FIT
-// Přeloženo: gcc 6.3.0
+// Přeloženo: MinGW 6.3.0, Ubuntu 9.4.0
 //
 // Obsahuje utility funkce pro bitset_t
 

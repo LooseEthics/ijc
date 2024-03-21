@@ -1,7 +1,7 @@
 // primes.c
 // Řešení IJC-DU1, příklad a), 19.3.2024
 // Autor: Jan Kugler, FIT
-// Přeloženo: gcc 6.3.0
+// Přeloženo: MinGW 6.3.0, Ubuntu 9.4.0
 //
 // Hlavní source file pro a)
 // Dále obsahuje:
@@ -71,40 +71,6 @@ unsigned long primorial(unsigned k){
   unsigned long out = 1;
   for (unsigned i = 0; i < k; i++) out *= first_twenty_primes[i];
   return out;
-}
-
-int tests(){
-  /*for (int i = 0; i < 11; i++){
-    printf("%u %lu\n", i, primorial(i));
-  }*/
-  //printf("%lu\n", modular_exp(2, 41, 42));
-  //printf("%lu\n", modular_exp(1350421767, 1238954434, 1890836600));
-  clock_t start, end;
-  double cpu_time_used;
-  //unsigned long n = 5000000;
-  //unsigned long nstart = n;
-  //unsigned primes_found = 0;
-  unsigned istart = 50000000;
-  unsigned interval = 1000;
-  start = clock();
-  for (unsigned long i = istart; i < istart + interval; i++){
-    if (wilson_check(i) != 0){
-      printf("%lu\n", i);
-      ;
-    }
-  }
-  /*while (primes_found < 10){
-    if (wilson_check(n) != 0){
-      printf("%lu\n", n);
-      primes_found++;
-    }
-    n--;
-  }
-  */
-  end = clock();
-  cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-  printf("CPU time used: %f seconds\n", cpu_time_used);
-  return 0;
 }
 
 int main(){
